@@ -20,3 +20,31 @@ lst_of_num_citations = [paper['num_citation'] for paper in top_cited_papers]
 import pandas as pd
 df = pd.DataFrame(list(zip(lst_of_ids, lst_of_titles, lst_of_num_citations)),columns =['id', 'title', 'citation'])
 df.to_csv('D:/documents/tools/html/top_cited_papers.csv')
+
+##############################################################
+
+# 下载pdf文件
+
+import json
+from fake_useragent import UserAgent
+ua = UserAgent()
+import requests
+from bs4 import BeautifulSoup
+import time
+import random
+
+for i in range(len(lst_of_ids)):
+	page_link = 'https://www.aminer.cn/pub/{}/'.format(lst_of_ids[i])
+	headers = {'User-Agent': ua.random} # 更换headers来应对反爬虫
+	bs = BeautifulSoup(requests.get(page_link).content, "lxml")
+	pdf_link = bs.find('iframe')['src'].split('file=')[-1]
+	if "http" not in pdf_link:
+		pdf_link = "http:" + pdf_link
+	print(pdf_link)
+	with open(lst_of_titles[i] +'.pdf', 'wb') as f:
+		print('Downloading...')
+		headers = {'User-Agent': ua.random}
+		response = requests.get(pdf_link, headers=headers)
+		f.write(response.content)
+	print('Downloaded: '+ lst_of_titles[i])
+	time.sleep(random.random()*5)
