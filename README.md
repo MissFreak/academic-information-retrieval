@@ -1,1 +1,2 @@
-# academic-information-retrieval
+# 学术信息检索
+在这里，我将记录关于我的毕业论文实验步骤的相关代码。
